@@ -419,15 +419,6 @@ export class MemStorage implements IStorage {
         status: "active" as const,
       },
       {
-        name: "Netflix Unlock",
-        description: "Mở khóa Netflix khu vực và chặn quảng cáo",
-        category: "Video Streaming",
-        link: "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Shadowrocket/Rewrite/Netflix.conf", 
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-netflix",
-        status: "active" as const,
-      },
-      {
         name: "Instagram Premium",
         description: "Mở khóa tính năng Premium Instagram",
         category: "Social Media",
