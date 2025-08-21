@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /idfree
+Allow: /modules
+
+# Disallow admin pages for security
+Disallow: /admin/
+Disallow: /admin/login
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://nightmarket.site/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
