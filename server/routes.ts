@@ -2,9 +2,29 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertInquirySchema, loginSchema, insertAppleIdKeySchema, keyValidationSchema, insertModuleSchema } from "@shared/schema";
+import DOMPurify from "isomorphic-dompurify";
+import { randomBytes } from "crypto";
 
 // Simple session storage (in production, use Redis or proper session store)
 const adminSessions = new Set<string>();
+
+// Sanitize input function
+const sanitizeInput = (input: any): any => {
+  if (typeof input === 'string') {
+    return DOMPurify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  }
+  if (Array.isArray(input)) {
+    return input.map(sanitizeInput);
+  }
+  if (input && typeof input === 'object') {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(input)) {
+      sanitized[key] = sanitizeInput(value);
+    }
+    return sanitized;
+  }
+  return input;
+};
 
 // Admin middleware
 const requireAdmin = (req: any, res: any, next: any) => {
@@ -42,7 +62,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create inquiry
   app.post("/api/inquiries", async (req, res) => {
     try {
-      const validatedData = insertInquirySchema.parse(req.body);
+      const sanitizedBody = sanitizeInput(req.body);
+      const validatedData = insertInquirySchema.parse(sanitizedBody);
       const inquiry = await storage.createInquiry(validatedData);
       res.status(201).json(inquiry);
     } catch (error) {
@@ -77,8 +98,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // Create session
-      const sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      // Create secure session using crypto.randomBytes
+      const sessionId = randomBytes(32).toString('hex');
       adminSessions.add(sessionId);
       
       res.json({ token: sessionId });
@@ -162,14 +183,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/apple-keys", requireAdmin, async (req, res) => {
     try {
-      console.log("Creating Apple ID key with data:", req.body);
-      const validatedData = insertAppleIdKeySchema.parse(req.body);
-      console.log("Validated data:", validatedData);
+      const sanitizedBody = sanitizeInput(req.body);
+      const validatedData = insertAppleIdKeySchema.parse(sanitizedBody);
       const key = await storage.createAppleIdKey(validatedData);
-      console.log("Created key:", key);
       res.status(201).json(key);
     } catch (error) {
-      console.error("Error creating Apple ID key:", error);
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });
       } else {
@@ -212,7 +230,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/modules", requireAdmin, async (req, res) => {
     try {
-      const validatedData = insertModuleSchema.parse(req.body);
+      const sanitizedBody = sanitizeInput(req.body);
+      const validatedData = insertModuleSchema.parse(sanitizedBody);
       const module = await storage.createModule(validatedData);
       res.status(201).json(module);
     } catch (error) {
@@ -226,7 +245,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/admin/modules/:id", requireAdmin, async (req, res) => {
     try {
-      const validatedData = insertModuleSchema.partial().parse(req.body);
+      const sanitizedBody = sanitizeInput(req.body);
+      const validatedData = insertModuleSchema.partial().parse(sanitizedBody);
       const module = await storage.updateModule(req.params.id, validatedData);
       if (!module) {
         return res.status(404).json({ message: "Module not found" });
