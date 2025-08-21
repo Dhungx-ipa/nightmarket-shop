@@ -1,16 +1,26 @@
+# Áp dụng cho tất cả bot
 User-agent: *
 Allow: /
-Allow: /idfree
-Allow: /modules
 
-# Disallow admin pages for security
+# Chặn khu vực nhạy cảm
 Disallow: /admin/
 Disallow: /admin/login
-
-# Disallow API endpoints
 Disallow: /api/
 
-# Sitemap location
+# Google Image Bot (tối ưu index hình ảnh)
+User-agent: Googlebot-Image
+Allow: /images/
+Disallow: /admin/
+
+# Google News Bot (nếu có bài dạng tin tức)
+User-agent: Googlebot-News
+Allow: /
+
+# Google Ads Bot (để quảng cáo không bị chặn)
+User-agent: AdsBot-Google
+Allow: /
+
+# Khai báo sitemap
 Sitemap: https://nightmarket.site/sitemap.xml
 
 # Crawl delay (optional)
