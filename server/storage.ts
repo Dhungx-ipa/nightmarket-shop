@@ -1,9 +1,8 @@
 import { type Service, type InsertService, type Inquiry, type InsertInquiry, type AdminUser, type InsertAdminUser, type AppleIdKey, type InsertAppleIdKey, type Module, type InsertModule, services, inquiries, adminUsers, appleIdKeys, modules } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import { db } from "./db";
 
 export interface IStorage {
   // Services
@@ -50,6 +49,7 @@ export class MemStorage implements IStorage {
     this.adminUsers = new Map();
     this.appleIdKeys = new Map();
     this.modules = new Map();
+    
     this.seedServices();
     this.seedAdmin();
     this.seedModules();
@@ -272,181 +272,38 @@ export class MemStorage implements IStorage {
     return false;
   }
 
-  // Modules methods
+  // Modules methods (using database)
   async getModules(): Promise<Module[]> {
-    return Array.from(this.modules.values());
+    return await db.select().from(modules);
   }
 
   async createModule(insertModule: InsertModule): Promise<Module> {
-    const id = randomUUID();
-    const module: Module = {
-      ...insertModule,
-      id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.modules.set(id, module);
-    return module;
+    const [newModule] = await db
+      .insert(modules)
+      .values(insertModule)
+      .returning();
+    return newModule;
   }
 
   async updateModule(id: string, updateData: Partial<InsertModule>): Promise<Module | undefined> {
-    const module = this.modules.get(id);
-    if (!module) return undefined;
-    
-    const updatedModule: Module = { 
-      ...module, 
-      ...updateData, 
-      updatedAt: new Date() 
-    };
-    this.modules.set(id, updatedModule);
-    return updatedModule;
+    const [updatedModule] = await db
+      .update(modules)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(modules.id, id))
+      .returning();
+    return updatedModule || undefined;
   }
 
   async deleteModule(id: string): Promise<boolean> {
-    return this.modules.delete(id);
+    const result = await db
+      .delete(modules)
+      .where(eq(modules.id, id))
+      .returning();
+    return result.length > 0;
   }
 
   private seedModules() {
-    const sampleModules = [
-      // Nightmarket Server modules
-      {
-        name: "VIP Wink",
-        description: "Mở khóa tính năng VIP cho ứng dụng Wink",
-        category: "Social & Dating",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/VIP%20Wink.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-heart",
-        status: "new" as const,
-      },
-      {
-        name: "All Star",
-        description: "Mở khóa tính năng premium All Star",
-        category: "Productivity",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/All%20Star.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-star",
-        status: "new" as const,
-      },
-      {
-        name: "VSCO Premium",
-        description: "Mở khóa VSCO Premium với tất cả filter và tính năng",
-        category: "Photo & Video",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/VSCO%20Premium.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-camera",
-        status: "new" as const,
-      },
-      {
-        name: "Vivacut",
-        description: "Mở khóa Vivacut Premium cho chỉnh sửa video",
-        category: "Photo & Video",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/Vivacut.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-video",
-        status: "new" as const,
-      },
-      {
-        name: "Picsart Premium",
-        description: "Mở khóa Picsart Premium với tất cả tools và templates",
-        category: "Photo & Video",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/Picsart%20Premium.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-paint-brush",
-        status: "new" as const,
-      },
-      {
-        name: "Locket Gold V4",
-        description: "Mở khóa Locket Gold V4 với tất cả tính năng premium",
-        category: "Social & Dating",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Locket/refs/heads/main/Locket%20-V4.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-lock",
-        status: "new" as const,
-      },
-      {
-        name: "Alight Motion",
-        description: "Mở khóa Alight Motion Premium cho animation và VFX",
-        category: "Photo & Video",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Shadowrocket-Module/refs/heads/main/Module/Alight%20Motion.module",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-magic",
-        status: "new" as const,
-      },
-      {
-        name: "SoundCloudPlus",
-        description: "Mở khóa SoundCloud Plus với tất cả tính năng premium",
-        category: "Music Streaming",
-        link: "https://raw.githubusercontent.com/NightmarketServer/SoundCloudPlus/refs/heads/main/soundcloudplus.module",
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-soundcloud",
-        status: "new" as const,
-      },
-      {
-        name: "Bilibili No ADS",
-        description: "Chặn quảng cáo Bilibili và mở khóa tính năng premium",
-        category: "Video Streaming",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Bilibili-No-ADS/refs/heads/main/Bilibili%20No%20ADS",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-play-circle",
-        status: "new" as const,
-      },
-      {
-        name: "Spotify Plus",
-        description: "Mở khóa Spotify Premium với tất cả tính năng và chặn quảng cáo",
-        category: "Music Streaming",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Spotify/refs/heads/main/SpotifyPre.module",
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-spotify",
-        status: "updated" as const,
-      },
-      {
-        name: "YouTube Premium",
-        description: "Chặn quảng cáo YouTube và mở khóa Premium features",
-        category: "Video Streaming",
-        link: "https://raw.githubusercontent.com/NightmarketServer/Youtube-Premium/refs/heads/main/YouTubePremium.module",
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-youtube",
-        status: "updated" as const,
-      },
-      // Original sample modules
-      {
-        name: "TikTok Region Unlock",
-        description: "Mở khóa khu vực TikTok và loại bỏ watermark",
-        category: "Social Media", 
-        link: "https://raw.githubusercontent.com/Semporia/TikTok-Unlock/master/Shadowrocket/TikTok-US.conf",
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-tiktok",
-        status: "active" as const,
-      },
-      {
-        name: "Instagram Premium",
-        description: "Mở khóa tính năng Premium Instagram",
-        category: "Social Media",
-        link: "https://raw.githubusercontent.com/app2smile/rules/master/module/instagram.module",
-        type: "shadowrocket" as const,
-        iconClass: "fab fa-instagram", 
-        status: "active" as const,
-      },
-      {
-        name: "AdBlock Pro",
-        description: "Chặn quảng cáo toàn diện cho Safari và các ứng dụng khác",
-        category: "AdBlock",
-        link: "https://raw.githubusercontent.com/bigdargon/hostsVN/master/option/domain.txt",
-        type: "shadowrocket" as const,
-        iconClass: "fas fa-shield-alt",
-        status: "active" as const,
-      },
-    ];
-
-    sampleModules.forEach(module => {
-      const id = randomUUID();
-      this.modules.set(id, {
-        ...module,
-        id,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    });
+    // No seed modules - all modules will be managed through database
   }
 }
 
