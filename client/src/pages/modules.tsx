@@ -7,6 +7,7 @@ import { Copy, Check, ExternalLink, Loader2, Home, Settings, Key, Film } from 'l
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { Module } from "@shared/schema";
+import AdBanner from "@/components/ad-banner";
 
 export default function ModulesPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -156,6 +157,8 @@ export default function ModulesPage() {
           </div>
         </div>
 
+        <AdBanner className="bg-gradient-to-br from-gray-900/50 via-purple-900/30 to-blue-900/50 backdrop-blur-sm border-t border-b border-white/10" />
+
         {modules.length === 0 ? (
           <div className="text-center">
             <div className="bg-black/30 backdrop-blur-sm border border-white/10 rounded-2xl p-12 shadow-2xl max-w-md mx-auto">
@@ -238,6 +241,8 @@ export default function ModulesPage() {
             ))}
           </div>
         )}
+
+        <AdBanner className="mt-12 bg-gradient-to-br from-gray-900/50 via-purple-900/30 to-blue-900/50 backdrop-blur-sm border-t border-b border-white/10" />
 
         {/* Footer */}
         <div className="text-center mt-16 pb-8">

@@ -9,18 +9,9 @@ const app = express();
 // Trust proxy for rate limiting in production
 app.set('trust proxy', 1);
 
-// Security headers
+// Security headers - Temporarily disable CSP for ads
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://raw.githubusercontent.com"]
-    }
-  },
+  contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false
 }));
 
@@ -46,6 +37,11 @@ app.use('/api/admin/login', strictLimiter);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Serve ad test file
+app.get('/ad-test.html', (req, res) => {
+  res.sendFile('public/ad-test.html', { root: '.' });
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

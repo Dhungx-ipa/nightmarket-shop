@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { keyValidationSchema, type KeyValidationData } from "@shared/schema";
 import { Copy, Eye, EyeOff, CheckCircle, Key } from "lucide-react";
+import AdBanner from "@/components/ad-banner";
 
 interface AppleIdResult {
   appleId: string;
@@ -84,6 +85,8 @@ export default function IdFree() {
           </div>
         </div>
       </header>
+
+      <AdBanner className="bg-night-darker/30 border-b border-night-purple/20" />
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
@@ -217,6 +220,8 @@ export default function IdFree() {
             </CardContent>
           </Card>
         </div>
+        
+        <AdBanner className="mt-8 bg-night-darker/30 border-t border-night-purple/20" />
       </div>
     </div>
   );
