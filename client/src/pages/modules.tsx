@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, ExternalLink, Loader2, Home, Settings, Key, Film } from 'lucide-react';
+import { Copy, Check, ExternalLink, Loader2, Home, Settings, Key, Film, Book } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { Module } from "@shared/schema";
@@ -235,6 +235,20 @@ export default function ModulesPage() {
                         </>
                       )}
                     </Button>
+                    
+                    {/* Conditional Guide Button for Locket modules */}
+                    {module.name.toLowerCase().includes('locket') && (
+                      <Link href="/huong-dan-locket" className="w-full">
+                        <Button
+                          variant="outline"
+                          className="w-full border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 hover:border-yellow-400/50 py-3 rounded-xl transition-all duration-300"
+                          data-testid={`button-guide-${module.id}`}
+                        >
+                          <Book className="h-4 w-4 mr-2" />
+                          Hướng dẫn
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </CardContent>
               </Card>

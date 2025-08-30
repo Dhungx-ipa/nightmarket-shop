@@ -9,6 +9,7 @@ import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin";
 import IdFree from "@/pages/idfree";
 import ModulesPage from "@/pages/modules";
+import HuongDanLocket from "@/pages/huong-dan-locket";
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/idfree" component={IdFree} />
       <Route path="/modules" component={ModulesPage} />
+      <Route path="/huong-dan-locket" component={HuongDanLocket} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={AdminDashboard} />
       <Route component={NotFound} />
