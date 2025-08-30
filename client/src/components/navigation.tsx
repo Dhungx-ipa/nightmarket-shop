@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Home, Settings, Key, Film } from 'lucide-react';
+import { Home, Settings, Key, Film, ExternalLink } from 'lucide-react';
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,9 +34,13 @@ export default function Navigation() {
               <Key className="h-4 w-4" />
               <span>ID Free</span>
             </Link>
-            <a href="https://pxd.onrender.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd">
+            <a href="https://pxd.nightmarket.site" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd">
               <Film className="h-4 w-4" />
-              <span>PXD</span>
+              <span>PhimXuyenDem</span>
+            </a>
+            <a href="https://sidestore.io/#get-started" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors" data-testid="nav-sidestore">
+              <ExternalLink className="h-4 w-4" />
+              <span>SideStore</span>
             </a>
           </div>
 
@@ -51,7 +55,7 @@ export default function Navigation() {
             <Link href="/idfree" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-idfree-mobile">
               <Key className="h-5 w-5" />
             </Link>
-            <a href="https://pxd.onrender.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd-mobile">
+            <a href="https://pxd.nightmarket.site" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd-mobile">
               <Film className="h-5 w-5" />
             </a>
           </div>
