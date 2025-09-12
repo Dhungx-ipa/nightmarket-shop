@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [editingModule, setEditingModule] = useState<Module | null>(null);
 
   // Check if admin is authenticated
   const { data: isAuthenticated, isLoading: authLoading } = useQuery({
@@ -158,6 +159,29 @@ export default function AdminDashboard() {
     },
   });
 
+  const updateModuleMutation = useMutation({
+    mutationFn: async (data: { id: string; updates: Partial<InsertModule> }) => {
+      const response = await apiRequest("PUT", `/api/admin/modules/${data.id}`, data.updates);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/modules"] });
+      setEditingModule(null);
+      moduleForm.reset();
+      toast({
+        title: "Đã cập nhật module thành công!",
+        description: "Thông tin module đã được cập nhật.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Lỗi khi cập nhật module",
+        description: error.message || "Không thể cập nhật module. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const keyForm = useForm<InsertAppleIdKey>({
     resolver: zodResolver(insertAppleIdKeySchema),
     defaultValues: {
@@ -187,6 +211,49 @@ export default function AdminDashboard() {
 
   const onCreateModule = (data: InsertModule) => {
     createModuleMutation.mutate(data);
+  };
+
+  const onUpdateModule = (data: InsertModule) => {
+    if (editingModule) {
+      updateModuleMutation.mutate({
+        id: editingModule.id,
+        updates: data,
+      });
+    }
+  };
+
+  const handleEditModule = (module: Module) => {
+    setEditingModule(module);
+    moduleForm.reset({
+      name: module.name,
+      description: module.description,
+      category: module.category,
+      link: module.link,
+      type: module.type as "shadowrocket" | "quantumult" | "surge",
+      iconClass: module.iconClass,
+      status: module.status as "active" | "updated" | "new",
+    });
+    
+    // Cuộn lên phần form chỉnh sửa
+    setTimeout(() => {
+      const moduleFormElement = document.querySelector('[data-testid="form-module"]');
+      if (moduleFormElement) {
+        moduleFormElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingModule(null);
+    moduleForm.reset({
+      name: "",
+      description: "",
+      category: "",
+      link: "",
+      type: "shadowrocket",
+      iconClass: "fas fa-rocket",
+      status: "active",
+    });
   };
 
   if (authLoading) {
@@ -579,17 +646,36 @@ export default function AdminDashboard() {
 
           <TabsContent value="modules">
             <div className="space-y-6">
-              {/* Create Module Form */}
-              <Card className="bg-night-darker border-night-purple/20">
+              {/* Create/Edit Module Form */}
+              <Card className="bg-night-darker border-night-purple/20" data-testid="form-module">
                 <CardHeader>
-                  <CardTitle className="text-night-text">Tạo Module Mới</CardTitle>
+                  <CardTitle className="text-night-text">
+                    {editingModule ? 'Chỉnh sửa Module' : 'Tạo Module Mới'}
+                  </CardTitle>
                   <CardDescription className="text-night-muted">
-                    Thêm module ShadowRocket mới vào hệ thống
+                    {editingModule ? 'Cập nhật thông tin module' : 'Thêm module ShadowRocket mới vào hệ thống'}
                   </CardDescription>
+                  {editingModule && (
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Badge variant="outline" className="text-night-accent">
+                        Đang chỉnh sửa: {editingModule.name}
+                      </Badge>
+                      <Button
+                        data-testid="button-cancel-edit"
+                        onClick={handleCancelEdit}
+                        variant="ghost"
+                        size="sm"
+                        className="text-night-muted hover:text-night-text"
+                      >
+                        <i className="fas fa-times mr-1"></i>
+                        Hủy
+                      </Button>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <Form {...moduleForm}>
-                    <form onSubmit={moduleForm.handleSubmit(onCreateModule)} className="space-y-4">
+                    <form onSubmit={moduleForm.handleSubmit(editingModule ? onUpdateModule : onCreateModule)} className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                           control={moduleForm.control}
@@ -727,11 +813,15 @@ export default function AdminDashboard() {
                       </div>
 
                       <Button
+                        data-testid="button-submit-module"
                         type="submit"
                         className="w-full bg-gradient-to-r from-night-purple to-night-accent hover:from-night-purple/90 hover:to-night-accent/90"
-                        disabled={createModuleMutation.isPending}
+                        disabled={editingModule ? updateModuleMutation.isPending : createModuleMutation.isPending}
                       >
-                        {createModuleMutation.isPending ? "Đang tạo..." : "Tạo Module"}
+                        {editingModule ? 
+                          (updateModuleMutation.isPending ? "Đang cập nhật..." : "Cập nhật Module") :
+                          (createModuleMutation.isPending ? "Đang tạo..." : "Tạo Module")
+                        }
                       </Button>
                     </form>
                   </Form>
@@ -785,10 +875,24 @@ export default function AdminDashboard() {
                                  module.status === 'updated' ? 'Cập nhật' : 'Hoạt động'}
                               </Badge>
                               <Button
+                                data-testid={`button-edit-module-${module.id}`}
+                                onClick={() => handleEditModule(module)}
+                                variant="outline"
+                                size="icon"
+                                className="border-night-purple/50 text-night-text hover:bg-night-purple/10"
+                                aria-label="Sửa module"
+                                title="Sửa module"
+                              >
+                                <i className="fas fa-edit"></i>
+                              </Button>
+                              <Button
+                                data-testid={`button-delete-module-${module.id}`}
                                 onClick={() => deleteModuleMutation.mutate(module.id)}
                                 variant="destructive"
-                                size="sm"
+                                size="icon"
                                 disabled={deleteModuleMutation.isPending}
+                                aria-label="Xóa module"
+                                title="Xóa module"
                               >
                                 <i className="fas fa-trash"></i>
                               </Button>
