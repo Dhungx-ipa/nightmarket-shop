@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Edit, Trash2 } from "lucide-react";
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
@@ -883,7 +884,7 @@ export default function AdminDashboard() {
                                 aria-label="Sửa module"
                                 title="Sửa module"
                               >
-                                <i className="fas fa-edit"></i>
+                                <Edit className="h-4 w-4" />
                               </Button>
                               <Button
                                 data-testid={`button-delete-module-${module.id}`}
@@ -894,7 +895,7 @@ export default function AdminDashboard() {
                                 aria-label="Xóa module"
                                 title="Xóa module"
                               >
-                                <i className="fas fa-trash"></i>
+                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
                           </div>
