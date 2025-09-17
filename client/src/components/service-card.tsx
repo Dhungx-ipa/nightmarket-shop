@@ -16,7 +16,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ service, delay = 0 }: ServiceCardProps) {
 
   const handleContactDiscord = () => {
-    window.open("https://discord.gg/3ef5D95sRP", "_blank");
+    window.open("https://discord.gg/juY9tw5AJY", "_blank");
   };
 
   const getBrandIcon = () => {
