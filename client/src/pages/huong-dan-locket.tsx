@@ -233,13 +233,13 @@ export default function HuongDanLocket() {
                 <strong>VPN</strong> và <strong>Apple ID</strong> cần thuê tại Discord:
               </p>
               <a 
-                href="https://discord.gg/3ef5D95sRP" 
+                href="https://discord.gg/juY9tw5AJY" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="inline-flex items-center px-4 py-2 bg-[#5865F2] hover:bg-[#4752C4] text-white rounded-lg transition-colors font-medium"
                 data-testid="discord-link"
               >
-                🔗 Discord Server: https://discord.gg/3ef5D95sRP
+                🔗 Discord Server: https://discord.gg/juY9tw5AJY
               </a>
             </div>
           </div>
@@ -292,7 +292,7 @@ export default function HuongDanLocket() {
               </h3>
               <div className="space-y-4">
                 <p className="text-night-text/90">
-                  Liên hệ thuê VPN tại Discord server: <a href="https://discord.gg/3ef5D95sRP" target="_blank" rel="noopener noreferrer" className="text-night-cyan hover:text-night-magenta transition-colors underline">https://discord.gg/3ef5D95sRP</a>
+                  Liên hệ thuê VPN tại Discord server: <a href="https://discord.gg/juY9tw5AJY" target="_blank" rel="noopener noreferrer" className="text-night-cyan hover:text-night-magenta transition-colors underline">https://discord.gg/3ef5D95sRP</a>
                 </p>
                 <p className="text-night-text/90">
                   VPN Premium sẽ có <strong>độ ổn định cao</strong> và <strong>tốc độ nhanh</strong> hơn VPN free
