@@ -110,7 +110,7 @@ export default function ModulesPage() {
                 <Key className="h-4 w-4" />
                 <span>ID Free</span>
               </Link>
-              <a href="https://pxd.onrender.com" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd">
+              <a href="https://pxd.nightmarket.site" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd">
                 <Film className="h-4 w-4" />
                 <span>PXD</span>
               </a>
@@ -127,7 +127,7 @@ export default function ModulesPage() {
               <Link href="/idfree" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-idfree-mobile">
                 <Key className="h-5 w-5" />
               </Link>
-              <a href="https://pxd.onrender.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd-mobile">
+              <a href="https://pxd.nightmarket.site" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors" data-testid="nav-pxd-mobile">
                 <Film className="h-5 w-5" />
               </a>
             </div>
