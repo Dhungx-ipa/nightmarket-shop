@@ -13,24 +13,18 @@ export function RentalPopup() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const hasSeenPopup = localStorage.getItem("rental-popup-seen");
-    
-    if (!hasSeenPopup) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 1000);
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 1000);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
     setIsOpen(false);
-    localStorage.setItem("rental-popup-seen", "true");
   };
 
   const handleVisitNow = () => {
-    localStorage.setItem("rental-popup-seen", "true");
     window.open("https://dvgame.net/join/333", "_blank", "noopener,noreferrer");
     setIsOpen(false);
   };
