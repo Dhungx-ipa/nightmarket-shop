@@ -10,6 +10,7 @@ import AdminDashboard from "@/pages/admin";
 import IdFree from "@/pages/idfree";
 import ModulesPage from "@/pages/modules";
 import HuongDanLocket from "@/pages/huong-dan-locket";
+import { RentalNotificationBanner } from "@/components/rental-notification-banner";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="dark">
+          <RentalNotificationBanner />
           <Toaster />
           <Router />
         </div>
