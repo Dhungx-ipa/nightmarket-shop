@@ -11,6 +11,7 @@ import IdFree from "@/pages/idfree";
 import ModulesPage from "@/pages/modules";
 import HuongDanLocket from "@/pages/huong-dan-locket";
 import { RentalNotificationBanner } from "@/components/rental-notification-banner";
+import { RentalPopup } from "@/components/rental-popup";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <TooltipProvider>
         <div className="dark">
           <RentalNotificationBanner />
+          <RentalPopup />
           <Toaster />
           <Router />
         </div>
