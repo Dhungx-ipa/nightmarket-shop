@@ -227,7 +227,8 @@ export class MemStorage implements IStorage {
 
   async createAppleIdKey(insertKey: InsertAppleIdKey): Promise<AppleIdKey> {
     const id = randomUUID();
-    const keyCode = Math.random().toString(36).substring(2, 10).toUpperCase(); // Generate 8 character key
+    const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase(); // Generate 8 character key
+    const keyCode = `NIGHTMARKET-${randomPart}`; // Format: NIGHTMARKET-XXXXXXXX
     const key: AppleIdKey = {
       ...insertKey,
       id,
