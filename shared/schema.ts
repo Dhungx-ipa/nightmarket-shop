@@ -104,7 +104,9 @@ export const loginSchema = z.object({
 });
 
 export const keyValidationSchema = z.object({
-  keyCode: z.string().min(1, "Key không được để trống").length(8, "Key phải có 8 ký tự"),
+  keyCode: z.string()
+    .min(1, "Key không được để trống")
+    .regex(/^NIGHTMARKET-[A-Z0-9]{8}$/, "Key phải có định dạng NIGHTMARKET-XXXXXXXX (8 ký tự)"),
 });
 
 export type InsertService = z.infer<typeof insertServiceSchema>;
