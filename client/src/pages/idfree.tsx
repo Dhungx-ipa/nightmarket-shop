@@ -96,7 +96,7 @@ export default function IdFree() {
                 Nhập Key
               </CardTitle>
               <CardDescription className="text-night-muted">
-                Nhập key 8 ký tự để nhận tài khoản Apple ID
+                Nhập key định dạng NIGHTMARKET-XXXXXXXX để nhận tài khoản Apple ID
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -111,11 +111,11 @@ export default function IdFree() {
                         <FormControl>
                           <Input
                             data-testid="input-key-code"
-                            placeholder="Nhập key 8 ký tự"
+                            placeholder="NIGHTMARKET-XXXXXXXX"
                             className="bg-night-dark border-night-purple/30 text-night-text placeholder:text-night-muted focus:border-night-purple focus:ring-night-purple/20"
                             {...field}
                             onChange={(e) => field.onChange(e.target.value.toUpperCase())}
-                            maxLength={8}
+                            maxLength={20}
                           />
                         </FormControl>
                         <FormMessage />
