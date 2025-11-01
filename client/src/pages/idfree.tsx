@@ -12,6 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { keyValidationSchema, type KeyValidationData } from "@shared/schema";
 import { Copy, Eye, EyeOff, CheckCircle, Key } from "lucide-react";
 import AdBanner from "@/components/ad-banner";
+import InstallPrompt from "@/components/install-prompt";
 
 interface AppleIdResult {
   appleId: string;
@@ -223,6 +224,7 @@ export default function IdFree() {
         
         <AdBanner className="mt-8 bg-night-darker/30 border-t border-night-purple/20" />
       </div>
+      <InstallPrompt />
     </div>
   );
 }

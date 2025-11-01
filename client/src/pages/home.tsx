@@ -4,6 +4,7 @@ import ServiceGrid from "@/components/service-grid";
 import FeaturesSection from "@/components/features-section";
 import Footer from "@/components/footer";
 import AdBanner from "@/components/ad-banner";
+import InstallPrompt from "@/components/install-prompt";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <FeaturesSection />
       <AdBanner className="bg-night-darker border-t border-night-purple/10" />
       <Footer />
+      <InstallPrompt />
     </div>
   );
 }

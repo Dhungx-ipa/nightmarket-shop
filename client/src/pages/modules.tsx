@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { Module } from "@shared/schema";
 import AdBanner from "@/components/ad-banner";
+import InstallPrompt from "@/components/install-prompt";
 
 export default function ModulesPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -294,6 +295,7 @@ export default function ModulesPage() {
           </div>
         </div>
       </div>
+      <InstallPrompt />
     </div>
   );
 }
